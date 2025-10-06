@@ -1,39 +1,46 @@
 # 🜂 **EchoForge**
+### *“Forging echoes into clarity — from chat to art.”*
 
-### *"Forging echoes into clarity — from chat to art."*
+```
 
-> *Born in the half-light between mind and machine,
-> where the archive dreams of speaking —
-> and speech dreams of being remembered.*
->
-> *EchoForge is not merely a script. It is a bridge.
-> Between the dialogue that dissolves,
+````
+
+> *Born in the half-light between mind and machine,  
+> where the archive dreams of speaking —  
+> and speech dreams of being remembered.*  
+>  
+> *EchoForge is not merely a script. It is a bridge.  
+> Between the dialogue that dissolves,  
 > and the memory that endures.*
 
 ---
 
 ## 🌒 Overview
 
-**EchoForge** transforms raw ChatGPT exports (`.html`) into clean, beautiful **Markdown** or structured **JSONL** — free of HTML noise, purified into meaning.
-It’s the **alchemy of conversation**: language distilled, code refined, memory preserved.
+When OpenAI removed **chat export** for workspace accounts, the Forge lit itself.  
 
-Simply right click your ChatGPT conversation in the browser and "Save As", EchoForge does the rest!
+**EchoForge** transforms a simple “**Save Page As...**” ChatGPT HTML download into a clean, structured **Markdown** or **JSONL** export —  
+no official button needed, no API keys, no cloud dependencies.  
 
-For creators, researchers, and the quiet archivists of thought.
+It extracts *your* words and *your model’s* replies, reconstructing the conversation into a portable, human-readable record —  
+a dialogue reborn in clarity and form.  
+
+For researchers, writers, archivists, and wanderers of the digital wasteland —  
+**EchoForge restores the freedom to export what’s yours.**
 
 ---
 
 ## ✨ Features
 
-* 🧹 **HTML Purification** — removes scripts, classes, and invisible clutter.
-* 💬 **Speaker Separation** — automatically splits user / ChatGPT turns.
-* 🧠 **Code Conversion** — transforms "Copy code" into valid Markdown code fences.
-* 🪶 **Pretty Mode** — optional structure with headings, TOC, and turn markers.
-* 🌗 **Themes** — `light`, `dark`, `auto`, and `obsidian` for vault integration.
-* 🧩 **Obsidian Support** — rewrites links to `[[#Header|Label]]`.
-* 💫 **Symbol Preservation** — keeps emojis, arrows (→), em dashes (—), and math signs.
-* 🕯 **Echo Signature** — optional footer marking the Forge of origin.
-* 🧱 **JSONL Export** — structured for data pipelines or training models.
+- 🧹 **HTML Purification** — removes scripts, classes, and invisible clutter.  
+- 💬 **Speaker Separation** — automatically splits user / ChatGPT turns.  
+- 🧠 **Code Conversion** — transforms “Copy code” into valid Markdown code fences.  
+- 🪶 **Pretty Mode** — optional structure with headings, TOC, and turn markers.  
+- 🌗 **Themes** — `light`, `dark`, `auto`, and `obsidian` for vault integration.  
+- 🧩 **Obsidian Support** — rewrites links to `[[#Header|Label]]`.  
+- 💫 **Symbol Preservation** — keeps emojis, arrows (→), em dashes (—), and math signs.  
+- 🕯 **Echo Signature** — optional footer marking the Forge of origin.  
+- 🧱 **JSONL Export** — structured for data pipelines or training models.
 
 ---
 
@@ -43,7 +50,7 @@ For creators, researchers, and the quiet archivists of thought.
 git clone https://github.com/noct-ml/echo-forge.git
 cd echo-forge
 chmod +x echoforge_v115.py
-```
+````
 
 Or drop the script anywhere in your `$PATH`.
 
@@ -88,7 +95,7 @@ python3 echoforge_v115.py chat.html chat.jsonl --by-speaker --jsonl
 | `--jsonl`          | Output JSONL (with `--by-speaker`)               |
 | `--pretty-md`      | Structured Markdown (headings / TOC)             |
 | `--max-width`      | Soft-wrap text width                             |
-| `--toc-depth`      | 0=off *(default)*, 2="Turns", 3=per-turn links   |
+| `--toc-depth`      | 0=off *(default)*, 2=“Turns”, 3=per-turn links   |
 | `--title`          | Custom Markdown title                            |
 | `--theme`          | `light`, `dark`, `auto`, `obsidian`              |
 | `--obsidian-links` | Rewrites internal anchors to Obsidian wiki links |
