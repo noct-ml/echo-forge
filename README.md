@@ -17,6 +17,8 @@
 **EchoForge** transforms raw ChatGPT exports (`.html`) into clean, beautiful **Markdown** or structured **JSONL** — free of HTML noise, purified into meaning.
 It’s the **alchemy of conversation**: language distilled, code refined, memory preserved.
 
+Simply right click your ChatGPT conversation in the browser and "Save As", EchoForge does the rest!
+
 For creators, researchers, and the quiet archivists of thought.
 
 ---
