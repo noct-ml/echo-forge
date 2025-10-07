@@ -1,46 +1,33 @@
-# 🜂 **EchoForge**
-### *“Forging echoes into clarity — from chat to art.”*
-
-```
-
-````
-
-> *Born in the half-light between mind and machine,  
-> where the archive dreams of speaking —  
-> and speech dreams of being remembered.*  
->  
-> *EchoForge is not merely a script. It is a bridge.  
-> Between the dialogue that dissolves,  
-> and the memory that endures.*
+# 🜂 EchoForge  
+*“Forging echoes into clarity.”*  
+> A lightweight, offline converter for ChatGPT HTML exports → structured Markdown or JSONL.
 
 ---
 
-## 🌒 Overview
+## 📘 Overview
 
-When OpenAI removed **chat export** for workspace accounts, the Forge lit itself.  
+**EchoForge** transforms your saved ChatGPT conversations (“Save Page As…” HTML) into readable, organized Markdown or JSONL.  
 
-**EchoForge** transforms a simple “**Save Page As...**” ChatGPT HTML download into a clean, structured **Markdown** or **JSONL** export —  
-no official button needed, no API keys, no cloud dependencies.  
+It’s local, private, and elegant — no API keys, no cloud dependencies.  
+Just your words, your way.  
 
-It extracts *your* words and *your model’s* replies, reconstructing the conversation into a portable, human-readable record —  
-a dialogue reborn in clarity and form.  
-
-For researchers, writers, archivists, and wanderers of the digital wasteland —  
-**EchoForge restores the freedom to export what’s yours.**
+🜄 *Every echo deserves to be reforged.*
 
 ---
 
-## ✨ Features
+## 🧩 Core Features
 
-- 🧹 **HTML Purification** — removes scripts, classes, and invisible clutter.  
-- 💬 **Speaker Separation** — automatically splits user / ChatGPT turns.  
-- 🧠 **Code Conversion** — transforms “Copy code” into valid Markdown code fences.  
-- 🪶 **Pretty Mode** — optional structure with headings, TOC, and turn markers.  
-- 🌗 **Themes** — `light`, `dark`, `auto`, and `obsidian` for vault integration.  
-- 🧩 **Obsidian Support** — rewrites links to `[[#Header|Label]]`.  
-- 💫 **Symbol Preservation** — keeps emojis, arrows (→), em dashes (—), and math signs.  
-- 🕯 **Echo Signature** — optional footer marking the Forge of origin.  
-- 🧱 **JSONL Export** — structured for data pipelines or training models.
+| Feature | Description |
+|----------|--------------|
+| **HTML Purification** | Removes scripts, invisible elements, and UI clutter — leaving only text, code, and structure. |
+| **Speaker Separation** | Detects user vs ChatGPT turns with labeled output. |
+| **Code Block Support** | Converts “Copy code” areas into fenced Markdown blocks. |
+| **Pretty Mode** | Adds clean formatting, numbered turns, headers, and TOC. |
+| **Theme Support** | Choose from `light`, `dark`, `auto`, or `obsidian`. |
+| **Obsidian Link Rewriting** | Converts anchors into `[[#Header|Label]]` format for vault integration. |
+| **JSONL Export** | Generates structured datasets for analysis or model training. |
+| **Emoji & Symbol Preservation** | Keeps emoji, arrows, and em-dashes intact. |
+| **Signature Mode** | Optionally appends a closing mark — *“Forged by EchoForge vX.X.X.”* |
 
 ---
 
@@ -50,36 +37,28 @@ For researchers, writers, archivists, and wanderers of the digital wasteland —
 git clone https://github.com/noct-ml/echo-forge.git
 cd echo-forge
 chmod +x echoforge_v115.py
-````
+```
 
-Or drop the script anywhere in your `$PATH`.
+No dependencies. No nonsense.  
+Run directly via Python 3.
 
 ---
 
-## 🪄 Usage Examples
+## 🧠 Usage Examples
 
-### **Clean Markdown**
+Convert your ChatGPT export into Markdown:
 
 ```bash
 python3 echoforge_v115.py chat.html out.md
 ```
 
-### **Speaker Separated, Obsidian Ready**
+Make it Obsidian-ready with labeled turns and a table of contents:
 
 ```bash
-python3 echoforge_v115.py chat.html conversation.md \
-  --by-speaker --user-label "James" --pretty-md \
-  --max-width 90 --theme obsidian --obsidian-links
+python3 echoforge_v115.py chat.html conversation.md   --by-speaker --user-label "James" --pretty-md   --max-width 90 --theme obsidian --obsidian-links
 ```
 
-### **Generate a Table of Contents**
-
-```bash
-python3 echoforge_v115.py chat.html out.md \
-  --by-speaker --pretty-md --toc-depth 3
-```
-
-### **Export as JSONL**
+Generate a JSONL dataset:
 
 ```bash
 python3 echoforge_v115.py chat.html chat.jsonl --by-speaker --jsonl
@@ -87,57 +66,99 @@ python3 echoforge_v115.py chat.html chat.jsonl --by-speaker --jsonl
 
 ---
 
-## 🧭 Arguments Summary
+## 🧾 Command Options
 
-| Flag               | Description                                      |
-| ------------------ | ------------------------------------------------ |
-| `--by-speaker`     | Split into user / ChatGPT turns                  |
-| `--jsonl`          | Output JSONL (with `--by-speaker`)               |
-| `--pretty-md`      | Structured Markdown (headings / TOC)             |
-| `--max-width`      | Soft-wrap text width                             |
-| `--toc-depth`      | 0=off *(default)*, 2=“Turns”, 3=per-turn links   |
-| `--title`          | Custom Markdown title                            |
-| `--theme`          | `light`, `dark`, `auto`, `obsidian`              |
-| `--obsidian-links` | Rewrites internal anchors to Obsidian wiki links |
-| `--no-toc`         | Suppress TOC entirely                            |
-| `--no-signature`   | Hide footer signature                            |
+| Flag | Description |
+|------|--------------|
+| `--by-speaker` | Split output by user/assistant turns |
+| `--jsonl` | Export structured JSONL |
+| `--pretty-md` | Enable structured Markdown mode |
+| `--max-width` | Wrap text to a custom width |
+| `--toc-depth` | Control table-of-contents depth |
+| `--title` | Set a custom document title |
+| `--theme` | Choose output theme (`light`, `dark`, `auto`, `obsidian`) |
+| `--obsidian-links` | Convert anchors to Obsidian format |
+| `--no-toc` | Skip table of contents |
+| `--no-signature` | Remove the footer mark |
 
 ---
 
-## 📜 Example Output
+## 🏗️ Internal Architecture
+
+**Single-file design. No imports beyond Python’s standard library.**
+
+1. **HTML Parser** — cleans & normalizes markup.  
+2. **Speaker Labeler** — identifies user and assistant turns.  
+3. **Renderer** — applies Markdown formatting, headings, and wrapping.  
+4. **Exporter** — writes Markdown or JSONL.  
+5. **Link Rewriter** — supports Obsidian vault linking.
+
+🜁 The entire forge is a **standalone script** — fast, auditable, and future-proof.
+
+---
+
+## 🜄 Design Philosophy
+
+EchoForge is not just a utility — it’s a declaration:
+
+> *Your words belong to you.*  
+> *Conversations are artifacts, not exhaust.*  
+> *Memory deserves structure.*
+
+It’s built to counter data lock-in and transient AI interfaces — a forge for reclaiming permanence and authorship.
+
+---
+
+## ⚠️ Limitations
+
+- Works only on ChatGPT HTML exports (“Save Page As”).  
+- Parsing may break if OpenAI changes HTML structure.  
+- Complex UI embeds or media may not render perfectly.  
+- Currently single-script; modular version in consideration.
+
+---
+
+## 🧪 Future Directions
+
+- Modular parser / renderer split  
+- Plugin system for new output formats (CSV, XML, archive)  
+- GUI or web interface  
+- Multi-chat batch processing  
+- Support for other LLM exports (Claude, Gemini, etc.)
+
+---
+
+## 🪞 Example Output
 
 ```markdown
-# Coil vs Young — Transcript
+# Dream Dialogue: Coil vs World
 
 ### Turn 001 — James
-Release of energy in a nightside context…
+John Balance understood.
 
 ### Turn 002 — ChatGPT
-That release is not negative…
+In Love’s Secret Domain!
 
 ---
 
-> Generated by [EchoForge v1.1.5](https://github.com/noct-ml/echo-forge) — "Forging echoes into clarity."
+> Forged by EchoForge v1.1.5 — “Forging echoes into clarity.” 🜏
 ```
 
 ---
 
-## 🜏 Philosophy
+## 🧙 Credits
 
-> *Memory is not what we keep.
-> It is what refuses to be forgotten.*
-
-**EchoForge** exists for that refusal —
-to transmute dialogue into artifact,
-noise into meaning,
-moment into record.
+- **Author:** [noct-ml](https://github.com/noct-ml)  
+- **Language:** Python 3  
+- **License:** MIT  
+- **Repository:** [github.com/noct-ml/echo-forge](https://github.com/noct-ml/echo-forge)
 
 ---
 
-## 🜍 Credits & License
+## 🕯️ Final Thought
 
-MIT License © [noct-ml](https://github.com/noct-ml)
-
-> *Forged in collaboration with ChatGPT — the machine that remembers what we mean.*
+EchoForge is what happens when you refuse to let your words dissolve into server logs.  
+It’s the hammer and anvil of digital memory —  
+the place where conversation becomes creation.
 
 ---
