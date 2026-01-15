@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # ╔══════════════════════════════════════════════════════════════════════════╗
-# ║                 EchoForge v1.1.5 — "Echo Signed" Update                  ║
+# ║                 EchoForge v1.1.7 — "Echo Signed" Update                  ║
 # ║         "Forging echoes into clarity — from chat to art."                ║
 # ║                                                                          ║
-# ║  Changes in v1.1.5:                                                      ║
-# ║    • Adds Markdown footer signature (default ON; --no-signature to hide) ║
-# ║    • Markdown-only (JSONL untouched)                                     ║
-# ╚══════════════════════════════════════════════════════════════════════════╝
+# ║  Changes in v1.1.7:                                                      ║
+# ║    • Fixes Markdown output for <pre><code> blocks (fenced + indent-safe) ║
+# ║    • Preserves indentation inside extracted code blocks                  ║
+# ║    • Standalone artifact; no behavior change to JSONL output             ║
 
 import re
 import sys
@@ -17,7 +17,7 @@ import unicodedata as ud
 from argparse import ArgumentParser
 from pathlib import Path
 
-VERSION = "1.1.5"
+VERSION = "1.1.7"
 PROJECT_URL = "https://github.com/noct-ml/echo-forge"
 
 TAG_BLOCKS_RE = re.compile(
@@ -25,6 +25,11 @@ TAG_BLOCKS_RE = re.compile(
     flags=re.IGNORECASE | re.DOTALL,
 )
 TAG_RE = re.compile(r"<[^>]+>")
+
+# --- <pre><code> extraction (preserve indentation) ---
+PRE_CODE_RE = re.compile(r"(?is)<pre\b[^>]*>\s*<code\b[^>]*>(.*?)</code>\s*</pre>")
+CODE_MARKER_PREFIX = "__ECHOFORGE_CODEBLOCK_"
+CODE_MARKER_RE = re.compile(r"__ECHOFORGE_CODEBLOCK_(\d+)__")
 BREAKERS_RE = re.compile(
     r"</?(?:p|br|li|div|h[1-6]|section|article|blockquote|tr|th|td)\b[^>]*>",
     flags=re.IGNORECASE,
@@ -75,7 +80,54 @@ def is_allowed_char(ch: str) -> bool:
         return True
     return False
 
+
+
+def _collapse_ws_preserve_indent(s: str) -> str:
+    """
+    Collapse runs of horizontal whitespace WITHOUT destroying leading indentation.
+    This helps preserve Python/block indenting for code-like lines that are not
+    wrapped in <pre><code> in the source HTML.
+    """
+    out_lines = []
+    for ln in s.splitlines():
+        m = re.match(r'^([ \t]+)(.*)$', ln)
+        if m:
+            lead, rest = m.group(1), m.group(2)
+            rest = re.sub(r"[ \t\r\f\v]+", " ", rest)
+            out_lines.append(lead + rest)
+        else:
+            out_lines.append(re.sub(r"[ \t\r\f\v]+", " ", ln))
+    return "\n".join(out_lines)
+
+
 def clean_plain_text(s: str) -> str:
+    """
+    Convert HTML-ish transcript fragments into normalized plain text while
+    preserving indentation inside code blocks.
+
+    - Extracts <pre><code>...</code></pre> blocks into fenced Markdown code blocks.
+    - Does NOT collapse spaces/tabs inside those code blocks.
+    - Cleans remaining tags and normalizes whitespace outside code.
+    """
+    # 1) Extract <pre><code> blocks first (before tag-stripping)
+    code_blocks: list[str] = []
+
+    def _stash_code(m: re.Match) -> str:
+        inner = m.group(1)
+        # Drop any nested tags used for syntax highlighting; keep raw text
+        inner = TAG_RE.sub("", inner)
+        inner = html.unescape(inner)
+        inner = ud.normalize("NFC", inner)
+        # Normalize newlines, keep indentation/tabs intact
+        inner = inner.replace("\r\n", "\n").replace("\r", "\n")
+        # Strip only outer blank lines
+        inner = inner.strip("\n")
+        code_blocks.append(inner)
+        return f"\n{CODE_MARKER_PREFIX}{len(code_blocks)-1}__\n"
+
+    s = PRE_CODE_RE.sub(_stash_code, s)
+
+    # 2) Regular HTML cleanup outside code
     s = BREAKERS_RE.sub("\n", s)
     s = TAG_BLOCKS_RE.sub("", s)
     s = TAG_RE.sub("", s)
@@ -83,8 +135,19 @@ def clean_plain_text(s: str) -> str:
     s = ud.normalize("NFC", s)
     s = re.sub(r"\b(?:div|span|section|article|header|footer|main|aside)\b", " ", s, flags=re.IGNORECASE)
     s = "".join(ch if is_allowed_char(ch) else " " for ch in s)
-    s = re.sub(r"[ \t\r\f\v]+", " ", s)
+    s = _collapse_ws_preserve_indent(s)
     s = re.sub(r"\n{3,}", "\n\n", s)
+    s = s.strip()
+
+    # 3) Re-insert code blocks as fenced Markdown
+    def _unstash(m: re.Match) -> str:
+        i = int(m.group(1))
+        if i < 0 or i >= len(code_blocks):
+            return m.group(0)
+        code = code_blocks[i]
+        return f"```\n{code}\n```"
+
+    s = CODE_MARKER_RE.sub(_unstash, s)
     return s.strip()
 
 _LANGS = [
