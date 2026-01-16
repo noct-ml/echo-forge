@@ -1,7 +1,7 @@
 # 🜂 **EchoForge**
 ### *Transcriber of the Machine’s Whisper*
 —
-A lightweight, offline converter for ChatGPT HTML exports → clean Markdown or JSONL.  
+A lightweight, offline converter for ChatGPT HTML exports → clean Markdown or JSONL.
 Private, portable, precise — a tool for reclaiming your words from the void.
 
 > *Memory deserves structure.*
@@ -13,7 +13,8 @@ Private, portable, precise — a tool for reclaiming your words from the void.
 **EchoForge** transforms ChatGPT’s “Save Page As…” HTML into durable, human-readable artifacts:
 
 - Markdown for notes, vaults, and documents  
-- JSONL for datasets, training corpora, and analysis  
+- JSONL for datasets, training corpora, and analysis
+- Works under Windows/Linux/macOS
 
 No APIs.  
 No servers.  
@@ -55,7 +56,7 @@ python echoforge.py chat.html out.md
 
 ### Obsidian-Ready  
 ```bash
-python echoforge.py chat.html conversation.md --by-speaker --user-label "James" --pretty-md --max-width 90 --theme obsidian --obsidian-links
+python echoforge.py chat.html conversation.md --by-speaker --user-label "James" --pretty-md --theme obsidian --obsidian-links
 ```
 
 ### JSONL Dataset  
@@ -78,7 +79,7 @@ In Love’s Secret Domain!
 
 ---
 
-> Forged by EchoForge v1.1.5 — “Forging echoes into clarity.” 🜏
+> Forged by EchoForge v1.1.7 — “Forging echoes into clarity.” 🜏
 ```
 
 ---
@@ -120,6 +121,3 @@ Fast, minimal, future-proof.
 
 ---
 
-## 🜏 Constellation Seal
-
-> *A Tool of the Forge Constellation — crafted under the Black Sun.* 🜏
